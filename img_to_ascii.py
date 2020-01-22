@@ -7,6 +7,9 @@ import imageio
 import os, sys
 
 
+FIRST_TEXT_ASCII = 32
+LAST_TEXT_ASCII = 126
+
 """
 Input: An RGB value tuple
 Output: A 0-1 value based on the whiteness of the pixel
@@ -54,7 +57,17 @@ def compressPixels(pixels, topLeftIndex, blockWidth, blockHeight, w, h):
 	for val in vals:
 		compressedVal += val
 	compressedVal = compressedVal / len(vals)
-	return (int)(compressedVal * 126 // 1)
+	asciiVal = (int)(compressedVal * LAST_TEXT_ASCII // 1)
+
+	if (asciiVal < FIRST_TEXT_ASCII):
+		asciiVal += FIRST_TEXT_ASCII
+
+	if (asciiVal == FIRST_TEXT_ASCII):
+		asciiVal = LAST_TEXT_ASCII
+	elif (asciiVal == LAST_TEXT_ASCII):
+		asciiVal = FIRST_TEXT_ASCII
+
+	return asciiVal
 
 
 
