@@ -18,5 +18,26 @@ Input:  imageSequence - An array of image filenames to make a gif from
 Output: None
 Creates a gif from the seuqence of input images.
 """
-def makeSequentialGif(imageSequence, frameLength):
+def makeSequentialGif(frameLength, imageSequence):
+
+	
 	return
+
+
+
+"""
+Input: filename - a filename of an image
+Output: None
+Creates a series of images based on the frames of the gif.
+"""
+def gifToImages(filename):
+	gif = imageio.get_reader(filename)
+	gifTitle = filename.split(".gif")
+	i = 0
+	for frame in gif:
+		imageio.write(gifTitle + str(i) + ".gif", frame)
+		i++
+
+	return
+
+# 
