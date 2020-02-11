@@ -10,9 +10,11 @@ and operations regarding them.
 
 import imageio
 import natsort
+import cv2
 import os, sys
 
 IMAGE_EXTENSIONS = ('.gif','.png','.jpg')
+STANDARD_FRAME_LENGTH = 1/24
 
 
 """
@@ -24,12 +26,37 @@ Creates a gif from the seuqence of input images.
 Assembles the gif in alphabetical order of image names.
 Note: Filenames are ordered lexicographically at this point in time
 """
-def makeSequentialGif(imageFolderPath, newfilename, timePerFrame):
+def imagesToGif(imageFolderPath, newfilename, timePerFrame):
 	imFolder = os.listdir(imageFolderPath)
 	validImages = [imageio.imread(imageFolderPath +'/'+ x)\
 		for x in natsort.natsorted(imFolder) if x.endswith(IMAGE_EXTENSIONS)]
 
 	imageio.mimsave(newfilename + '.gif', validImages, duration=(float(timePerFrame)))
+	return
+
+
+
+"""
+Input:	videoFile - A path to a videoFile
+		gifName - The name of the gif to be made
+Output: None
+Creates a gif that runs from the starttime of the vid to the endtime.
+Note: Don't use this, it's unfinished.
+"""
+def vidToGif(videoFile, gifName):
+	vid = cv2.VideoCapture(videoFile)
+	frames = []
+
+	opened, currentFrame = vid.read()
+
+	while opened:
+		frames.append(currentFrame)
+		opened, currentFrame = vid.read()
+
+	imageio.mimsave(gifName, frames, duration=(STANDARD_FRAME_LENGTH))
+
+	vid.release()
+	cv2.destroyAllWindows()
 	return
 
 
@@ -49,3 +76,12 @@ def gifToImages(filename):
 		imageio.imwrite(gifTitle[0] + str(i) + ".gif", frame)
 		i += 1
 	return
+
+
+
+
+def main():
+	vidToGif("vidTest2.webm", 'newVid.gif')
+
+if __name__ == '__main__':
+	main()
